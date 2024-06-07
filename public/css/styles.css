@@ -221,3 +221,15 @@ footer{
   padding-left: 2em;
   font-weight: 600;
 }
+
+/* RESPONSIVE */
+
+@media (max-width: 1250px){
+  .hero{
+    grid-template-columns: 1fr;
+
+  }
+  .dmc-wrapper{
+    grid-template-columns: 1fr;
+  }
+}
