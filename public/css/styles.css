@@ -7,13 +7,13 @@
 }
 
 :root{
-  --sky-blue: #13b7d9;
-  --blue-dark: #001839;
+  --emerald-soft: #1F6135;
+  --emerald-dark: #174A2B;
 }
 
 #wrapper{
   overflow: hidden;
-  border: solid var(--sky-blue);
+  border: solid var(--emerald-soft);
   background-color: #ffff;
   margin: 4em 5em ;
   border-radius: 15px;
@@ -40,7 +40,7 @@ header{
 }
 
 .siteName span{
-  color: var(--sky-blue);
+  color: var(--emerald-soft);
   font-weight: 800;
 }
 
@@ -50,19 +50,19 @@ header{
 
 #tools a{
   text-decoration: none;
-  color: var(--sky-blue);
+  color: var(--emerald-soft);
   font-weight: 600;
   font-size: medium;
 }
 
 #tools a:hover{
-  color: var(--blue-dark);
+  color: var(--emerald-dark);
 
 }
 
 /* NAVIGATION */
 nav{
-  background-color: var(--blue-dark);
+  background-color: var(--emerald-dark);
   color: white;
 }
 
@@ -85,7 +85,7 @@ nav ul{
 nav ul li:hover{
   color: #ffff;
   transition: 0.4s;
-  background-color: var(--sky-blue);
+  background-color: var(--emerald-soft);
 }
 
 /* GENERAL */
@@ -120,7 +120,7 @@ h1{
   font-size: 4em;
   padding: 0;
   margin: 0;
-  color: var(--sky-blue);
+  color: var(--emerald-soft);
 }
 
 .main-action ul{
@@ -133,7 +133,7 @@ h1{
 
 .main-action button{
   align-self: center;
-  background-color: var(--sky-blue);
+  background-color: var(--emerald-soft);
   color: #ffff;
   padding: 1em 5em;
   font-weight: 700;
@@ -143,7 +143,7 @@ h1{
 }
 
 .main-action button:hover{
-  background-color: var(--blue-dark);
+  background-color: var(--emerald-dark);
   color: #ffff;
   transition: .4s;
   transform: scale(1.1);
@@ -189,19 +189,19 @@ h1{
   margin-left: 1em;
 }
 .card p{
-  background-color: var(--blue-dark);
+  background-color: var(--emerald-dark);
   color: #ffff;
   padding: 3.5em 3em;
 }
 
 .card p{
-  background-color: var(--sky-blue);
+  background-color: var(--emerald-soft);
   color: #ffff;
   padding: 3.5em 3em;
 }
 
 .card p:hover{
-  background-color: var(--blue-dark);
+  background-color: var(--emerald-dark);
   color: #ffff;
   transition: .6s;
 }
