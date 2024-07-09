@@ -13,6 +13,8 @@ const baseController = require("./controllers/baseController")
 
 const utilities = require("./utilities/index")
 
+const inventoryRoute = require("./routes/inventoryRoute")
+
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -34,7 +36,7 @@ app.use(async (req, res, next) => {
 })
 
 // Inventory routes
-// app.use("/inv", inventoryRoute)
+app.use("/inv", inventoryRoute)
 
 /* ***********************
  * Local Server Information
