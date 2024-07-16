@@ -14,7 +14,7 @@ const baseController = require("./controllers/baseController")
 const utilities = require("./utilities/index")
 
 const inventoryRoute = require("./routes/inventoryRoute")
-
+const pool = require('./database/')
 /* ***********************
  * View Engine and Templates
  *************************/
@@ -24,11 +24,19 @@ app.set("layout", "./layouts/layout") // not at views root
 
 const static = app.use(require("./routes/static"))
 
+app.use(async (req, res, next) => {
+  res.locals.nav = await utilities.getNav();
+  next();
+});
+ 
+
 /* ***********************
  * Routes
  *************************/
 
 app.get("/", utilities.handleErrors(baseController.buildHome))
+app.use("/inv", inventoryRoute)
+
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {
@@ -36,7 +44,7 @@ app.use(async (req, res, next) => {
 })
 
 // Inventory routes
-app.use("/inv", inventoryRoute)
+
 
 /* ***********************
  * Local Server Information

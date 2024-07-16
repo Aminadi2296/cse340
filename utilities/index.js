@@ -6,7 +6,7 @@ const Util = {}
  ************************** */
 Util.getNav = async function (req, res, next) {
   let data = await invModel.getClassifications()
-  console.log(data)
+  // console.log(data)
   let list = "<ul>"
   list += '<li><a href="/" title="Home page">Home</a></li>'
   data.rows.forEach((row) => {
@@ -98,7 +98,27 @@ Util.buildVehicleGrid = async function(data){
   }
   return grid
 }
+/* **************************************
+* Build the vehicle detail HTML
+* ************************************ */
 
+Util.buildVehicleDetailHTML = function(vehicle) {
+  console.log('Building vehicle detail HTML with data:', vehicle);
+  let html = `
+    <div class="vehicle-detail">
+      <h1>${vehicle.inv_make} ${vehicle.inv_model}</h1>
+      <img src="${vehicle.inv_image}" alt="Image of ${vehicle.inv_make} ${vehicle.inv_model}">
+      <p>${vehicle.inv_description}</p>
+      <p>Price: $${new Intl.NumberFormat('en-US').format(vehicle.inv_price)}</p>
+      <h2>Specifications:</h2>
+      <ul>
+  `
+  html += `
+      </ul>
+    </div>
+  `
+  return html
+}
 
 /* ****************************************
  * Middleware For Handling Errors
