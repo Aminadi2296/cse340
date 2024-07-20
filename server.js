@@ -61,11 +61,14 @@ app.use(async (req, res, next) => {
 /* ***********************
  * Routes
  *************************/
-
+// Index Route - Unit 3
 app.get("/", utilities.handleErrors(baseController.buildHome))
+
+// Inventory Routes - Unit 3
 app.use("/inv", inventoryRoute)
 
-app.use("/account", accountRoute)
+// Account Routes - Unit 4
+app.use("/account", require("./routes/accountRoute"))
 
 // File Not Found Route - must be last route in list
 app.use(async (req, res, next) => {

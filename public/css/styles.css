@@ -225,9 +225,21 @@ footer {
   margin: 0 auto;
   background: var(--blue);
   padding: 40px;
-  border-radius: 6px;
+  border-radius: 15px;
+  background: var(--emerald-dark);
+  color: white;
 }
 
+.bold {
+  color: white;
+  font-weight: 900;
+}
+
+.input-line span:nth-child(2) {
+  color: whitesmoke;
+  font-size: 12px;
+  padding: 1em 0;
+}
 .form.form-password {
   margin: 30px auto 0;
 }
@@ -267,9 +279,11 @@ footer {
 
 .form-submit-button {
   margin-top: 10px;
-  background: white;
   padding: 8px;
   font-size: 16px;
+  background: burlywood;
+  color: var(--emerald-soft);
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -278,7 +292,7 @@ footer {
 }
 
 .form-submit-button:hover {
-  background: lightsteelblue;
+  background: greenyellow;
 }
 
 .form-submit-button[disabled]:hover {
@@ -288,6 +302,11 @@ footer {
 .sign-up-suggestion {
   margin-top: 20px;
   text-align: center;
+}
+
+.sign-up-suggestion a {
+  color: white;
+  font-weight: 700;
 }
 
 .form-message {
@@ -322,17 +341,12 @@ label.invalid > textarea {
 
 input:required:invalid,
 input:focus:invalid {
-  /* background-image: url(/images/invalid.png);
-  background-position: right top;
-  background-repeat: no-repeat; */
   background-color: #fdc4c4;
   border-right-color: red;
   border-right-width: 5px;
 }
+
 input:required:valid {
-  /* background-image: url(/images/valid.png);
-  background-position: right top;
-  background-repeat: no-repeat; */
   background-color: #b7fde6;
   border-right-color: mediumaquamarine;
   border-right-width: 5px;
