@@ -18,6 +18,7 @@ const utilities = require("./utilities/index")
 const inventoryRoute = require("./routes/inventoryRoute")
 
 const accountRoute = require("./routes/accountRoute")
+const bodyParser = require("body-parser")
 
 
 
@@ -56,6 +57,9 @@ app.use(async (req, res, next) => {
   res.locals.nav = await utilities.getNav();
   next();
 });
+
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
  
 
 /* ***********************

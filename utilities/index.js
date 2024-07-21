@@ -120,6 +120,49 @@ Util.buildVehicleDetailHTML = function(vehicle) {
   return html
 }
 
+/* **************************************
+* Build the classification view HTML
+* ************************************ */
+Util.buildClassificationGrid = async function (data) {
+  const createHTML = (vehicle) => {
+    const make_and_model = `${vehicle.inv_make} ${vehicle.inv_model}`
+    return `
+    <li>
+      <div class="inv-link-container">
+        <div class="inv-img-container">
+          <img src="${vehicle.inv_thumbnail}" alt="Image of ${make_and_model} on CSE Motors">
+        </div>
+        <hr>
+        <h2 class="inv-title">${make_and_model}</h2>
+        <span class="inv-price">$${this.formatNumber(vehicle.inv_price)}</span>
+        <a class="inv-link" href="/inv/detail/${vehicle.inv_id}"></a>
+      </div>
+    </li>
+    `
+  }
+
+  let grid
+  if (data[0].inv_id === null) {
+    grid = `<p class="notice">Sorry, no vehicles could be found in this classification.</p>`
+  } else {
+    grid = `<ul id="inv-display">${data.map(vehicle => createHTML(vehicle)).join("")}</ul>`
+  }
+  return grid
+}
+
+
+
+
+Util.buildClassificationList = async function (active_id = null) {
+  const classifications = await invModel.getClassifications()
+  return `
+  <select name="classification_id" id="classificationList" required>
+    <option value="">Choose a Classification</option>
+
+  </select>`
+}
+
+
 
 /* ****************************************
  * Middleware For Handling Errors
