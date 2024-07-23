@@ -2,7 +2,8 @@
 <%- messages() %>
 
 <div class="management-links">
-  <% Object.keys(links).forEach(linkName=> { %>
-  <a href="<%= links[linkName] %>">Add new <%= linkName %></a>
-  <% }) %>
+  <ul class="inv-management">
+    <li><a href="/inv/add-classification">Add New Classification</a></li>
+    <li><a href="/inv/add-inventory">Add New Vehicle</a></li>
+  </ul>
 </div>

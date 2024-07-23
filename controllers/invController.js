@@ -11,9 +11,8 @@ invCont.buildByClassificationId = async function (req, res, next) {
   const data = await invModel.getInventoryByClassificationId(classification_id)
   const grid = await utilities.buildClassificationGrid(data)
   let nav = await utilities.getNav()
-  const className = data[0].classification_name
   res.render("./inventory/classification", {
-    title: className + " vehicles",
+    title: " vehicles",
     nav,
     grid,
     errors: null,
@@ -70,9 +69,118 @@ invCont.buildAddInventory = async (req, res) => {
     title: "Add new inventory item",
     nav,
     classificationList,
-    errors: null,
-    formData: null
+    errors: null
   })
+}
+
+invCont.addClassification = async function (req, res, next) {
+  const { classification_name } = req.body
+  const saveResult = await invModel.addClassification(classification_name)
+  let nav = await utilities.getNav();
+  if (saveResult){
+   
+    req.flash("success", `Classification ${classification_name} was successfully added.`);
+    res.status(201).render("inventory/management",{
+        nav,
+       
+        title: "Inventory Management",
+        errors: null
+    });
+}else{
+ 
+  req.flash("notice",`Sorry, something went wrong adding ${classification_name}.`)
+  res.status(501).render("inventory/newClassification",{
+      nav,
+      title: "Add New Classification",
+      errors: null,
+      classification_name
+  })
+}
+}
+// invCont.addInventory = async (req, res) => {
+//   const saveResult = await invModel.saveInventory(req.body)
+//   const nav = await utilities.getNav()
+//   const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+
+//   const vars = {
+//     title: "Add new inventory item",
+//     nav,
+//     classificationList,
+//     errors: null,
+//     formData: req.body
+//   }
+
+//   if (saveResult) {
+//     req.flash(
+//       "notice",
+//       `Congratulations, a new inventory item - 
+//       ${req.body.inv_make} ${req.body.inv_model} was successfully saved.`
+//     )
+//     res.status(201).render("inventory/add-inventory", vars)
+//   } else {
+//     req.flash("notice",
+//       `Sorry, an inventory item - ${req.body.inv_make} ${req.body.inv_model} was not saved.`)
+//     res.status(501).render("inventory/add-inventory", vars)
+//   }
+// }
+
+
+invCont.addClassification = async function (req, res, next) {
+  const { classification_name } = req.body
+  const saveResult = await invModel.addClassification(classification_name)
+  let nav = await utilities.getNav();
+  if (saveResult){
+   
+    req.flash("success", `Classification ${classification_name} was successfully added.`);
+    res.status(201).render("inventory/management",{
+        nav,
+       
+        title: "Inventory Management",
+        errors: null
+    });
+}else{
+ 
+  req.flash("notice",`Sorry, something went wrong adding ${classification_name}.`)
+  res.status(501).render("inventory/newClassification",{
+      nav,
+      title: "Add New Classification",
+      errors: null,
+      classification_name
+  })
+}
+}
+
+// ADD NEW VEHICLE
+
+invCont.addNewVehicle = async (req, res) => {
+  const {inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+    inv_miles, inv_color, inv_price, classification_id} = req.body;
+  const saveResult = await invModel.addInventory (classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+    inv_price,inv_miles, inv_color)
+ 
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+ 
+  const vars = {
+    title: "Add new inventory item",
+    nav,
+    classificationList,
+    errors: null,
+    formData: req.body
+  }
+ 
+  if (saveResult) {
+    req.flash(
+      "notice",
+      `Congratulations, a new inventory item -
+      ${req.body.inv_make} ${req.body.inv_model} was successfully saved.`
+    )
+    res.status(201).render("inventory/newVehicle", vars)
+  } else {
+    req.flash("notice",
+      `Sorry, an inventory item - ${req.body.inv_make} ${req.body.inv_model} was not saved.`)
+    res.status(501).render("inventory/newVehicle", vars)
+  }
 }
 
 
