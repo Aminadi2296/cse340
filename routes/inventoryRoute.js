@@ -28,10 +28,12 @@ router.post("/edit-inventory",
     validate.inventoryRules(),
     utilities.handleErrors(validate.checkInventory),
     utilities.handleErrors(invController.editVehicle));
-// router.get("/delete/:inventory_id",  utilities.handleErrors(invController.buildDeleteInventory));
-// //Route to delete an inventory item
-// router.post("/delete", utilities.handleErrors(invController.deleteInventory))
 
+    
+
+router.get("/delete/:inventory_id",  utilities.handleErrors(invController.buildDeleteInventory));
+//Route to delete an inventory item
+router.post("/delete", utilities.handleErrors(invController.deleteInventory))
 
 
 
