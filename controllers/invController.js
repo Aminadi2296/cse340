@@ -40,6 +40,7 @@ invCont.buildByVehicleId = async function (req, res, next) {
 
 invCont.buildManagement = async (req, res, next) =>{
   let nav = await utilities.getNav();
+  const classificationSelect = await utilities.buildClassificationList();
   const links = {
     "classification": "/inv/add-classification",
     "inventory": "/inv/add-inventory"
@@ -47,7 +48,20 @@ invCont.buildManagement = async (req, res, next) =>{
   res.render("inventory/management", {
       title: "Inventory Management",
       nav,
+      classificationSelect,
       links    
+  });
+}
+
+invCont.buildManagementView = async (req, res, next)=>{
+  let nav = await utilities.getNav();
+  let tools = utilities.getTools(req);
+  const classificationSelect = await utilities.buildClassificationList();
+  res.render("./inventory/management",{
+      nav,
+      tools,
+      classificationSelect,
+      title: "Inventory Management"
   });
 }
 
@@ -73,6 +87,55 @@ invCont.buildAddInventory = async (req, res) => {
   })
 }
 
+
+
+invCont.buildEditInventory = async (req, res) => {
+  const nav = await utilities.getNav()
+  const vehicle = await invModel.getVehicleById(req.params.inventory_id)
+  const classificationList = await utilities.buildClassificationList(vehicle.classification_id)
+  res.render("inventory/edit-inventory", {
+    title: "Edit inventory item",
+    nav,
+    classificationList,
+    errors: null,
+    vehicle
+  })
+}
+
+invCont.editVehicle = async (req, res) => {
+  const {inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+    inv_miles, inv_color, inv_price, classification_id, inv_id} = req.body;
+  const saveResult = await invModel.editInventory (classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+    inv_price,inv_miles, inv_color, inv_id)
+ 
+  const nav = await utilities.getNav()
+  const classificationList = await utilities.buildClassificationList(req.body.classification_id)
+ 
+  const vars = {
+    title: "edit inventory item",
+    nav,
+    classificationList,
+    errors: null,
+    formData: req.body
+  }
+ 
+  if (saveResult) {
+    req.flash(
+      "notice",
+      `Congratulations, a new inventory item -
+      ${req.body.inv_make} ${req.body.inv_model} was successfully saved.`
+    )
+    res.status(201).render("inventory/newVehicle", vars)
+  } else {
+    req.flash("notice",
+      `Sorry, an inventory item - ${req.body.inv_make} ${req.body.inv_model} was not saved.`)
+    res.status(501).render("inventory/newVehicle", vars)
+  }
+}
+
+
+
+
 invCont.addClassification = async function (req, res, next) {
   const { classification_name } = req.body
   const saveResult = await invModel.addClassification(classification_name)
@@ -81,9 +144,9 @@ invCont.addClassification = async function (req, res, next) {
    
     req.flash("success", `Classification ${classification_name} was successfully added.`);
     res.status(201).render("inventory/management",{
-        nav,
-       
         title: "Inventory Management",
+        nav,
+        classificationSelect,
         errors: null
     });
 }else{
@@ -97,6 +160,7 @@ invCont.addClassification = async function (req, res, next) {
   })
 }
 }
+
 // invCont.addInventory = async (req, res) => {
 //   const saveResult = await invModel.saveInventory(req.body)
 //   const nav = await utilities.getNav()
@@ -182,6 +246,67 @@ invCont.addNewVehicle = async (req, res) => {
     res.status(501).render("inventory/newVehicle", vars)
   }
 }
+
+
+/* ***************************
+ *  Return Inventory by Classification As JSON
+ * ************************** */
+invCont.getInventoryJSON = async (req, res, next) => {
+  const classification_id = parseInt(req.params.classification_id)
+  const invData = await invModel.getInventoryByClassificationId(classification_id)
+  if (invData[0].inv_id) {
+    return res.json(invData)
+  } else {
+    next(new Error("No data returned"))
+  }
+}
+
+
+/* ***************************
+ *  Build delete inventory view
+ * ************************** */
+invCont.buildDeleteInventory = async (req, res, next) =>{
+  const inventory_id = req.params.inventory_id;
+  let nav = await utilities.getNav();
+  let tools = utilities.getTools(req);
+  const itemData = await invModel.getInventoryDetailsById(inventory_id);
+  const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`;
+  res.render("./inventory/deleteInventory",{
+      title: "Delete "+itemName,
+      nav,
+      tools,
+      errors: null,
+      inv_id: itemData[0].inv_id,
+      inv_make: itemData[0].inv_make,
+      inv_model: itemData[0].inv_model,
+      inv_year: itemData[0].inv_year,
+      inv_price: itemData[0].inv_price
+  });
+}
+
+// SPARE SECTION
+invCont.buildSpares = async (req, res, next) =>{
+  let nav = await utilities.getNav();
+  const itemData = await invModel.getInventoryDetailsById(spare_id);
+  // const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`;
+  res.render("/inventory/spare",{
+      title: "Car Spares",
+      nav,
+      errors: null,
+      spare_id: itemData[0].spare_id,
+      spare_name: itemData[0].spare_name,
+      inventory_id: itemData[0].inventory_id    
+  });
+}
+
+invCont.buildSparesView = async (req, res, next) =>{
+  let nav = await utilities.getNav();
+  res.render("/inventory/spare",{
+      nav,
+      title: "Spares Management"
+  });
+}
+
 
 
 module.exports = invCont

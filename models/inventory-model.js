@@ -1,6 +1,4 @@
 const pool = require("../database")
-const { get } = require("../routes/static")
-
 
 /* ***************************
  *  Get all classification data
@@ -42,13 +40,14 @@ async function getInventoryDetailsById(inventory_id){
  
 }
 
+
 /* ***************************
  *  Get vehicle details by vehicle_id
  * ************************** */
 async function getVehicleById(vehicleId) {
   try {
     const query = {
-      text: 'SELECT * FROM public.inventory WHERE inventory_id = $1',
+      text: 'SELECT * FROM public.inventory WHERE inv_id = $1',
       values: [vehicleId],
     };
     const result = await pool.query(query);
@@ -84,8 +83,44 @@ async function addInventory(classification_id, inv_make, inv_model, inv_year, in
   }
 }
 
+async function editInventory(classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+  inv_price,inv_miles, inv_color, inv_id) {
+  try {
+    const sql = "UPDATE public.inventory SET classification_id = $1, inv_make = $2, inv_model =$3, inv_year =$4, inv_description =$5, inv_image =$6, inv_thumbnail =$7, inv_price =$8,inv_miles =$9, inv_color=$10 WHERE inv_id = $11"
+    return await pool.query(sql, [classification_id, inv_make, inv_model, inv_year, inv_description, inv_image, inv_thumbnail,
+      inv_price,inv_miles, inv_color, inv_id])
+  } catch (error) {
+    console.log(error.message) 
+    throw error
+  }
+}
 
 
 
 
-module.exports = {getInventoryByClassificationId, getClassifications, getVehicleById, addClassification, addInventory, getInventoryDetailsById} 
+
+
+
+/* ***************************
+ *  Get spares view
+ * ************************** */
+
+async function getSparesById(spare_id){
+  try{
+      const data = await pool.query(
+          `SELECT *
+          FROM public.inventory
+          WHERE spare_id = $1`, [spare_id]
+      );
+      console.log('Hello', data)
+      return data.rows;
+  }catch(error){
+      console.error("getSparesById error: "+ error);
+  }
+ 
+}
+
+
+
+
+module.exports = {getInventoryByClassificationId, getClassifications, getVehicleById, addClassification, addInventory, getInventoryDetailsById, getSparesById, editInventory} 

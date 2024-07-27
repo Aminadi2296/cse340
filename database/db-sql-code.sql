@@ -226,7 +226,7 @@ VALUES (
         'White',
         5
     );
--- QUERY #5
+-- QUERY #5//
 SELECT inv_make,
     inv_model,
     classification_name
@@ -237,3 +237,9 @@ WHERE inv.classification_id = 2;
 UPDATE inventory
 SET inv_image = REPLACE(inv_image, 'images', '/images/vehicles'),
     inv_thumbnail = REPLACE(inv_thumbnail, 'images', '/images/vehicles');
+--QUERY week 6 for Spare 
+CREATE TABLE spares (
+    spare_id SERIAL PRIMARY KEY,
+    spare_name VARCHAR(255) NOT NULL,
+    inventory_id INT NOT NULL
+);

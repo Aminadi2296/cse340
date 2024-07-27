@@ -5,10 +5,11 @@
 /* ***********************
  * Require Statements
  *************************/
+
 const session = require("express-session")
+const expressLayouts = require("express-ejs-layouts")
 const pool = require('./database/')
 const express = require("express")
-const expressLayouts = require("express-ejs-layouts")
 const env = require("dotenv").config()
 const app = express()
 const baseController = require("./controllers/baseController")
@@ -17,8 +18,13 @@ const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
 const bodyParser = require("body-parser")
 const cookieParser = require("cookie-parser")
+const static = require("./routes/static");
 
+app.set("view engine", "ejs")
+app.use(expressLayouts)
+app.set("layout", "./layouts/layout") // not at views root
 
+app.use(express.static('public'));
 
 /* ***********************
  * Middleware
@@ -34,6 +40,10 @@ app.use(session({
   name: 'sessionId',
 }))
 
+app.use(cookieParser())
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(utilities.checkJWTToken)
 
 // Express Messages Middleware
 app.use(require('connect-flash')())
@@ -42,26 +52,13 @@ app.use(function(req, res, next){
   next()
 })
 
-app.use(cookieParser())
-app.use(utilities.checkJWTToken)
-
 /* ***********************
  * View Engine and Templates
  *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout") // not at views root
-
-const static = app.use(require("./routes/static"))
-
 app.use(async (req, res, next) => {
   res.locals.nav = await utilities.getNav();
   next();
 });
-
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
- 
 
 
 /* ***********************
@@ -81,10 +78,24 @@ app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
 })
 
+
+app.use(async (err, req, res, next) => {
+  let nav = await utilities.getNav()
+  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
+  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
+  res.render("errors/error", {
+    title: err.status || 'Server Error',
+    message,
+    nav
+  })
+})
+
+
 /* ***********************
  * Local Server Information
  * Values from .env (environment) file
  *************************/
+app.use(static);
 const port = process.env.PORT
 const host = process.env.HOST
 
@@ -110,14 +121,5 @@ app.listen(port, () => {
 //   })
 // })
 
-app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
-  console.error(`Error at: "${req.originalUrl}": ${err.message}`)
-  if(err.status == 404){ message = err.message} else {message = 'Oh no! There was a crash. Maybe try a different route?'}
-  res.render("errors/error", {
-    title: err.status || 'Server Error',
-    message,
-    nav
-  })
-})
+
 
