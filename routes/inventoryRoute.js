@@ -38,7 +38,7 @@ router.post("/delete", utilities.handleErrors(invController.deleteInventory))
 
 
 // w6 spare
-router.get("/getInventory/spare", utilities.handleErrors(invController.buildSparesView))
+router.get("/spare", utilities.handleErrors(invController.buildSpares))
 
 
 module.exports = router;

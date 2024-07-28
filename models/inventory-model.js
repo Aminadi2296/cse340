@@ -147,6 +147,22 @@ async function getSparesById(spare_id){
 }
 
 
+async function getSpareById(spare_id){
+  try{
+      const data = await pool.query(
+          `SELECT *
+          FROM public.spares
+          WHERE spare_id = $1`, [spare_id]
+      );
+      return data.rows;
+  }catch(error){
+      console.error("getSpareById error: "+ error);
+  }
+ 
+}
 
 
-module.exports = {getInventoryByClassificationId, getClassifications, getVehicleById, addClassification, addInventory, getInventoryDetailsById, getSparesById, editInventory, deleteInventory, deleteVehicle} 
+
+
+
+module.exports = {getInventoryByClassificationId, getClassifications, getVehicleById, addClassification, addInventory, getInventoryDetailsById, getSparesById, editInventory, deleteInventory, deleteVehicle, getSpareById} 

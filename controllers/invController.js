@@ -318,26 +318,29 @@ invCont.deleteInventory = async (req, res, next) =>{
 
 // SPARE SECTION
 invCont.buildSpares = async (req, res, next) =>{
-  let nav = await utilities.getNav();
-  const itemData = await invModel.getInventoryDetailsById(spare_id);
-  // const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`;
-  res.render("/inventory/spare",{
-      title: "Car Spares",
-      nav,
-      errors: null,
-      spare_id: itemData[0].spare_id,
-      spare_name: itemData[0].spare_name,
-      inventory_id: itemData[0].inventory_id    
-  });
-}
+  try {
+    let nav = await utilities.getNav();
+    const itemData = await invModel.getSpareById(spare_name);
+      res.render("./inventory/spare", { title: "Car Spares",
+        nav,
+        errors: null,
+        spare_id: itemData[0].spare_id,
+        spare_name: itemData[0].spare_name,
+        inventory_id: itemData[0].inventory_id });
+  } catch (error) {
+      res.status(500).send('Server error');
+  }
+};
 
-invCont.buildSparesView = async (req, res, next) =>{
-  let nav = await utilities.getNav();
-  res.render("/inventory/spare",{
-      nav,
-      title: "Spares Management"
-  });
-}
+
+
+// invCont.buildSparesView = async (req, res, next) =>{
+//   let nav = await utilities.getNav();
+//   res.render("/inventory/spare",{
+//       nav,
+//       title: "Spares Management"
+//   });
+// }
 
 
 
